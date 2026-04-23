@@ -651,32 +651,83 @@
     }
 
     function enterMenu() {
-      var name = document.getElementById('at-name').value.trim();
-      var phone = document.getElementById('at-phone').value.trim();
-      if (!name) {
-        document.getElementById('at-name').focus();
-        document.getElementById('at-name').style.borderColor = '#ff5252';
-        return;
-      }
-      if (phone.length !== 10 || isNaN(phone)) {
-        document.getElementById('at-phone').focus();
-        document.getElementById('at-phone').style.borderColor = '#ff5252';
-        return;
-      }
-      localStorage.setItem('guest_name', name);
-      localStorage.setItem('guest_phone', phone);
-      localStorage.setItem('entry_time', new Date().toLocaleTimeString());
-      document.getElementById('antitheft-overlay').style.opacity = '0';
-      document.getElementById('antitheft-overlay').style.transition = 'opacity 0.5s';
-      setTimeout(function() {
-        document.getElementById('antitheft-overlay').style.display = 'none';
-      }, 500);
-    }
+  var name = document.getElementById('at-name').value.trim();
+  var phone = document.getElementById('at-phone').value.trim();
+
+  // Reset border colors
+  document.getElementById('at-name').style.borderColor = '';
+  document.getElementById('at-phone').style.borderColor = '';
+
+  // Name check — just needs something typed
+  if (name.length < 2) {
+    document.getElementById('at-name').style.borderColor = '#ff5252';
+    document.getElementById('at-name').focus();
+    return;
+  }
+
+  // Phone check — at least 6 digits
+  if (phone.length < 6) {
+    document.getElementById('at-phone').style.borderColor = '#ff5252';
+    document.getElementById('at-phone').focus();
+    return;
+  }
+
+  // Save details
+  try {
+    localStorage.setItem('guest_name', name);
+    localStorage.setItem('guest_phone', phone);
+    localStorage.setItem('entry_time', new Date().toLocaleTimeString());
+  } catch(e) {}
+
+  // Hide overlay
+  var overlay = document.getElementById('antitheft-overlay');
+  overlay.style.transition = 'opacity 0.5s';
+  overlay.style.opacity = '0';
+  setTimeout(function() {
+    overlay.style.display = 'none';
+  }, 500);
+}
 
     function setFilter(f, el) {
       currentFilter = f;
       document.querySelectorAll('.filter-tab').forEach(function(t) {
-        t.classList.remove('active');
+        t.classList.remove('activfunction enterMenu() {
+  var name = document.getElementById('at-name').value.trim();
+  var phone = document.getElementById('at-phone').value.trim();
+
+  // Reset border colors
+  document.getElementById('at-name').style.borderColor = '';
+  document.getElementById('at-phone').style.borderColor = '';
+
+  // Name check — just needs something typed
+  if (name.length < 2) {
+    document.getElementById('at-name').style.borderColor = '#ff5252';
+    document.getElementById('at-name').focus();
+    return;
+  }
+
+  // Phone check — at least 6 digits
+  if (phone.length < 6) {
+    document.getElementById('at-phone').style.borderColor = '#ff5252';
+    document.getElementById('at-phone').focus();
+    return;
+  }
+
+  // Save details
+  try {
+    localStorage.setItem('guest_name', name);
+    localStorage.setItem('guest_phone', phone);
+    localStorage.setItem('entry_time', new Date().toLocaleTimeString());
+  } catch(e) {}
+
+  // Hide overlay
+  var overlay = document.getElementById('antitheft-overlay');
+  overlay.style.transition = 'opacity 0.5s';
+  overlay.style.opacity = '0';
+  setTimeout(function() {
+    overlay.style.display = 'none';
+  }, 500);
+    }e');
       });
       el.classList.add('active');
       renderMenu();
