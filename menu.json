@@ -1,0 +1,108 @@
+{
+  "restaurant": "Sharma Dhaba",
+  "tagline": "Taste the Tradition",
+  "address": "Main Road, Your Town",
+  "phone": "9876543210",
+  "dishes": [
+    {
+      "id": 1,
+      "name": "Chicken Biryani",
+      "price": 120,
+      "category": "Main Course",
+      "type": "nonveg",
+      "spice": 4,
+      "chef": true,
+      "bestseller": true,
+      "isNew": false,
+      "rating": 4.8,
+      "reviews": 124,
+      "ingredients": "Rice, Chicken, Spices, Onion, Curd, Saffron",
+      "description": "Slow cooked aromatic biryani with tender chicken pieces marinated in special spices. Cooked on dum for 2 hours for the perfect flavour.",
+      "photo": "photos/biryani.jpg",
+      "reviewsList": [
+        { "name": "Rahul S.", "stars": 5, "comment": "Best biryani in town! The aroma is amazing." },
+        { "name": "Priya M.", "stars": 5, "comment": "Perfectly cooked, will order again!" },
+        { "name": "Amit K.", "stars": 4, "comment": "Very tasty, slight less spicy than expected." }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Paneer Butter Masala",
+      "price": 150,
+      "category": "Main Course",
+      "type": "veg",
+      "spice": 2,
+      "chef": false,
+      "bestseller": true,
+      "isNew": false,
+      "rating": 4.6,
+      "reviews": 89,
+      "ingredients": "Paneer, Butter, Tomato, Cream, Cashew, Spices",
+      "description": "Rich and creamy paneer curry cooked in buttery tomato gravy with cashew paste for extra richness.",
+      "photo": "photos/paneer.jpg",
+      "reviewsList": [
+        { "name": "Sneha P.", "stars": 5, "comment": "Creamy and delicious! Perfect with naan." },
+        { "name": "Vikram T.", "stars": 4, "comment": "Great taste, generous portions." }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Dal Makhani",
+      "price": 90,
+      "category": "Main Course",
+      "type": "veg",
+      "spice": 2,
+      "chef": false,
+      "bestseller": false,
+      "isNew": false,
+      "rating": 4.4,
+      "reviews": 67,
+      "ingredients": "Black Dal, Butter, Cream, Tomato, Garlic, Spices",
+      "description": "Slow cooked overnight dal with rich creamy texture. A classic comfort food made with love.",
+      "photo": "photos/dal.jpg",
+      "reviewsList": [
+        { "name": "Anita R.", "stars": 5, "comment": "Tastes just like home!" },
+        { "name": "Rajan B.", "stars": 4, "comment": "Very filling and tasty." }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Butter Naan",
+      "price": 40,
+      "category": "Bread",
+      "type": "veg",
+      "spice": 0,
+      "chef": false,
+      "bestseller": false,
+      "isNew": false,
+      "rating": 4.5,
+      "reviews": 201,
+      "ingredients": "Flour, Butter, Yeast, Salt, Milk",
+      "description": "Soft fluffy naan baked fresh in our tandoor and brushed generously with fresh butter.",
+      "photo": "photos/naan.jpg",
+      "reviewsList": [
+        { "name": "Deepak M.", "stars": 5, "comment": "Perfectly soft and buttery!" }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Mango Lassi",
+      "price": 60,
+      "category": "Drinks",
+      "type": "veg",
+      "spice": 0,
+      "chef": true,
+      "bestseller": false,
+      "isNew": true,
+      "rating": 4.7,
+      "reviews": 45,
+      "ingredients": "Alphonso Mango, Fresh Curd, Sugar, Milk, Cardamom",
+      "description": "Thick refreshing mango lassi made with fresh Alphonso mangoes. Our new summer special!",
+      "photo": "photos/lassi.jpg",
+      "reviewsList": [
+        { "name": "Kavya S.", "stars": 5, "comment": "So thick and refreshing! Love it." },
+        { "name": "Rohit P.", "stars": 5, "comment": "Best lassi I have ever had!" }
+      ]
+    }
+  ]
+}
