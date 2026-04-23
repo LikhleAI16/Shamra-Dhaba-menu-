@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Sharma Dhaba — Digital Menu</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --gold: #FFD700; --gold2: #FFA500;
+      --purple: #1a0533; --purple2: #2d0a4e; --purple3: #3d1a5e;
+      --card: rgba(45,10,78,0.85); --text: #f5f0ff;
+      --subtext: rgba(245,240,255,0.6); --green: #00e676; --red: #ff5252;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    body { font-family:'Nunito',sans-serif; background:var(--purple); color:var(--text); min-height:100vh; overflow-x:hidden; padding-bottom:90px; }
+
+    /* LANGUAGE SELECTION SCREEN */
+    #lang-screen {
+      position:fixed; top:0; left:0; width:100%; height:100%;
+      background:linear-gradient(160deg,#0d0020 0%,#1a0533 50%,#2d0a4e 100%);
+      z-index:999999;
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      padding:30px; text-align:center;
+    }
+    .ls-glow {
+      position:absolute; top:0; left:0; width:100%; height:100%;
+      background:radial-gradient(ellipse at 50% 30%,rgba(255,215,0,0.08) 0%,transparent 60%);
+      pointer-events:none;
+    }
+    .ls-emoji { font-size:60px; margin-bottom:14px; position:relative; animation:lsbounce 2s infinite alternate; }
+    @keyframes lsbounce { from{transform:translateY(0);} to{transform:translateY(-10px);} }
+    .ls-title { font-family:'Playfair Display',serif; font-size:28px; color:var(--gold); margin-bottom:6px; position:relative; text-shadow:0 0 30px rgba(255,215,0,0.4); }
+    .ls-subtitle { color:var(--subtext); font-size:13px; margin-bottom:35px; position:relative; }
+    .ls-label { font-size:12px; color:rgba(255,215,0,0.7); letter-spacing:2px; text-transform:uppercase; margin-bottom:16px; position:relative; }
+    .ls-options { display:flex; flex-direction:column; gap:12px; width:100%; position:relative; }
+    .ls-btn {
+      background:rgba(255,255,255,0.05);
+      border:1.5px solid rgba(255,215,0,0.25);
+      border-radius:18px; padding:18px 20px;
+      display:flex; align-items:center; gap:16px;
+      cursor:pointer; touch-action:manipulation;
+      transition:all 0.2s; text-align:left;
+      font-family:'Nunito',sans-serif;
+      width:100%;
+    }
+    .ls-btn:active { transform:scale(0.97); border-color:var(--gold); background:rgba(255,215,0,0.1); }
+    .ls-btn-flag { font-size:32px; flex-shrink:0; }
+    .ls-btn-text { flex:1; }
+    .ls-btn-name { font-size:18px; font-weight:800; color:white; display:block; margin-bottom:2px; }
+    .ls-btn-native { font-size:13px; color:var(--subtext); display:block; }
+    .ls-btn-arrow { color:rgba(255,215,0,0.4); font-size:18px; }
+    body::before { content:''; position:fixed; top:0; left:0; width:100%; height:100%; background:radial-gradient(ellipse at 20% 20%,rgba(100,0,180,0.3) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(180,0,100,0.2) 0%,transparent 50%); pointer-events:none; z-index:0; }
+    .header { position:relative; padding:30px 20px 22px; text-align:center; z-index:1; border-bottom:1px solid rgba(255,215,0,0.2); }
+    .header::after { content:''; position:absolute; bottom:0; left:10%; width:80%; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); }
+    .header-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+    .lang-btn { background:rgba(255,215,0,0.1); border:1px solid rgba(255,215,0,0.3); color:var(--gold); padding:6px 14px; border-radius:20px; font-size:12px; font-weight:700; cursor:pointer; font-family:'Nunito',sans-serif; touch-action:manipulation; }
+    .rest-emoji { font-size:44px; display:block; margin-bottom:6px; }
+    .rest-name { font-family:'Playfair Display',serif; font-size:28px; color:var(--gold); text-shadow:0 0 30px rgba(255,215,0,0.4); margin-bottom:4px; }
+    .rest-tagline { color:var(--subtext); font-size:13px; }
+    .search-wrap { padding:14px 15px 6px; position:relative; z-index:1; }
+    .search-box { width:100%; background:rgba(255,255,255,0.07); border:1.5px solid rgba(255,215,0,0.2); border-radius:14px; padding:13px 16px 13px 44px; color:white; font-size:15px; font-family:'Nunito',sans-serif; outline:none; }
+    .search-box::placeholder { color:rgba(255,255,255,0.3); }
+    .search-icon { position:absolute; left:28px; top:50%; transform:translateY(-50%); font-size:18px; pointer-events:none; }
+    .filter-wrap { padding:8px 15px 12px; display:flex; gap:8px; overflow-x:auto; scrollbar-width:none; z-index:1; position:relative; }
+    .filter-wrap::-webkit-scrollbar { display:none; }
+    .filter-tab { background:rgba(255,255,255,0.06); border:1.5px solid rgba(255,255,255,0.12); color:var(--subtext); padding:7px 16px; border-radius:20px; font-size:13px; font-weight:700; white-space:nowrap; cursor:pointer; font-family:'Nunito',sans-serif; touch-action:manipulation; }
+    .filter-tab.active { background:rgba(255,215,0,0.15); border-color:var(--gold); color:var(--gold); }
+    #menu-container { padding:0 12px 20px; position:relative; z-index:1; }
+    .cat-title { padding:18px 6px 10px; font-family:'Playfair Display',serif; font-size:16px; color:var(--gold); display:flex; align-items:center; gap:10px; }
+    .cat-title::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,rgba(255,215,0,0.3),transparent); }
+    .dish-card { background:var(--card); border:1px solid rgba(255,215,0,0.15); border-radius:18px; padding:13px; margin-bottom:10px; display:flex; align-items:center; gap:13px; text-decoration:none; color:var(--text); position:relative; overflow:hidden; backdrop-filter:blur(10px); transition:transform 0.2s; }
+    .dish-card:active { transform:scale(0.97); }
+    .card-badges { position:absolute; top:10px; right:10px; display:flex; flex-direction:column; gap:4px; align-items:flex-end; }
+    .badge-chef { background:linear-gradient(135deg,#FF6B35,#FF4500); color:white; font-size:9px; font-weight:800; padding:3px 8px; border-radius:20px; }
+    .badge-best { background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#1a0533; font-size:9px; font-weight:800; padding:3px 8px; border-radius:20px; }
+    .badge-new { background:linear-gradient(135deg,#00e676,#00b0ff); color:#000; font-size:9px; font-weight:800; padding:3px 8px; border-radius:20px; }
+    .dish-thumb { width:78px; height:78px; border-radius:14px; object-fit:cover; border:2px solid rgba(255,215,0,0.2); flex-shrink:0; background:var(--purple3); }
+    .dish-info { flex:1; min-width:0; padding-right:30px; }
+    .dish-info h3 { font-size:15px; font-weight:700; margin-bottom:5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .dish-meta { display:flex; align-items:center; gap:6px; margin-bottom:5px; flex-wrap:wrap; }
+    .veg-badge { font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; }
+    .veg { background:rgba(0,230,118,0.12); border:1px solid var(--green); color:var(--green); }
+    .nonveg { background:rgba(255,82,82,0.12); border:1px solid var(--red); color:var(--red); }
+    .stars { display:flex; gap:1px; }
+    .star { font-size:11px; color:rgba(255,255,255,0.2); }
+    .star.filled { color:var(--gold); }
+    .rating-count { font-size:10px; color:var(--subtext); }
+    .dish-price { font-size:17px; font-weight:800; color:#90EE90; }
+    .card-arrow { position:absolute; bottom:13px; right:13px; color:rgba(255,215,0,0.4); font-size:14px; }
+    .no-results { text-align:center; padding:50px 20px; color:var(--subtext); }
+    .bill-fab { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#1a0533; border:none; padding:15px 35px; border-radius:50px; font-size:16px; font-weight:800; font-family:'Nunito',sans-serif; cursor:pointer; z-index:999; box-shadow:0 4px 25px rgba(255,215,0,0.4); animation:pulse 2s infinite; touch-action:manipulation; white-space:nowrap; }
+    @keyframes pulse { 0%,100% { box-shadow:0 4px 25px rgba(255,215,0,0.4); } 50% { box-shadow:0 4px 40px rgba(255,215,0,0.7); } }
+    .modal-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9998; display:none; align-items:flex-end; justify-content:center; }
+    .modal-overlay.open { display:flex; }
+    .modal-box { background:linear-gradient(180deg,#2d0a4e,#1a0533); border-top:2px solid rgba(255,215,0,0.4); border-radius:24px 24px 0 0; width:100%; max-height:92vh; overflow-y:auto; padding:24px 18px 40px; animation:slideup 0.4s cubic-bezier(0.22,1,0.36,1); }
+    @keyframes slideup { from { transform:translateY(100%); } to { transform:translateY(0); } }
+    .modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+    .modal-title { font-family:'Playfair Display',serif; font-size:22px; color:var(--gold); }
+    .modal-close { background:rgba(255,255,255,0.1); border:none; color:white; width:34px; height:34px; border-radius:50%; font-size:18px; cursor:pointer; font-family:'Nunito',sans-serif; touch-action:manipulation; }
+    .step { display:none; }
+    .step.active { display:block; }
+    .step-title { font-size:13px; color:var(--subtext); margin-bottom:14px; text-align:center; }
+    .bill-item { background:rgba(255,255,255,0.05); border:1px solid rgba(255,215,0,0.15); border-radius:14px; padding:12px 14px; margin-bottom:10px; display:flex; align-items:center; gap:12px; }
+    .bill-item-info { flex:1; }
+    .bill-item-name { font-size:14px; font-weight:700; margin-bottom:2px; }
+    .bill-item-price { font-size:13px; color:#90EE90; }
+    .qty-ctrl { display:flex; align-items:center; gap:10px; }
+    .qty-btn { background:rgba(255,215,0,0.15); border:1px solid rgba(255,215,0,0.3); color:var(--gold); width:32px; height:32px; border-radius:50%; font-size:20px; cursor:pointer; font-family:'Nunito',sans-serif; display:flex; align-items:center; justify-content:center; touch-action:manipulation; line-height:1; }
+    .qty-num { font-size:16px; font-weight:800; color:white; min-width:20px; text-align:center; }
+    .bill-summary { background:rgba(255,215,0,0.06); border:1px solid rgba(255,215,0,0.2); border-radius:16px; padding:16px; margin:16px 0; }
+    .bill-row { display:flex; justify-content:space-between; font-size:14px; padding:5px 0; color:var(--subtext); }
+    .bill-row.total { border-top:1px solid rgba(255,215,0,0.3); margin-top:8px; padding-top:12px; font-size:18px; font-weight:800; color:#90EE90; }
+    .proceed-btn { width:100%; background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#1a0533; border:none; padding:16px; border-radius:14px; font-size:16px; font-weight:800; font-family:'Nunito',sans-serif; cursor:pointer; touch-action:manipulation; }
+    .proceed-btn:disabled { opacity:0.4; cursor:not-allowed; }
+    .input-label { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:8px; display:block; margin-top:14px; }
+    .phone-input { width:100%; background:rgba(255,255,255,0.07); border:1.5px solid rgba(255,215,0,0.3); border-radius:14px; padding:14px 16px; color:white; font-size:18px; font-family:'Nunito',sans-serif; outline:none; letter-spacing:2px; }
+    .phone-input::placeholder { color:rgba(255,255,255,0.3); letter-spacing:0; }
+    .phone-input:focus { border-color:var(--gold); }
+    .bill-preview { background:rgba(0,0,0,0.3); border:1px solid rgba(255,215,0,0.2); border-radius:14px; padding:14px; margin:14px 0; font-size:13px; color:var(--subtext); line-height:1.9; max-height:160px; overflow-y:auto; }
+    .whatsapp-btn { width:100%; background:linear-gradient(135deg,#25D366,#128C7E); color:white; border:none; padding:16px; border-radius:14px; font-size:16px; font-weight:800; font-family:'Nunito',sans-serif; cursor:pointer; touch-action:manipulation; display:flex; align-items:center; justify-content:center; gap:10px; }
+    .back-step { width:100%; background:transparent; border:1px solid rgba(255,255,255,0.2); color:var(--subtext); padding:12px; border-radius:14px; font-size:14px; font-family:'Nunito',sans-serif; cursor:pointer; margin-top:10px; touch-action:manipulation; }
+    .success-wrap { text-align:center; padding:20px 0; }
+    .success-emoji { font-size:60px; margin-bottom:15px; }
+    .success-title { font-family:'Playfair Display',serif; font-size:24px; color:var(--gold); margin-bottom:10px; }
+    .success-text { color:var(--subtext); font-size:14px; line-height:1.7; margin-bottom:20px; }
+    .done-btn { background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#1a0533; border:none; padding:14px 40px; border-radius:14px; font-size:15px; font-weight:800; font-family:'Nunito',sans-serif; cursor:pointer; touch-action:manipulation; }
+    #loading { text-align:center; padding:60px 20px; color:var(--gold); }
+    .load-spin { width:40px; height:40px; border:3px solid rgba(255,215,0,0.2); border-top-color:var(--gold); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 15px; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .footer { text-align:center; padding:20px; color:rgba(255,255,255,0.2); font-size:11px; position:relative; z-index:1; }
+  </style>
+</head>
+<body>
+
+  <!-- LANGUAGE SELECTION SCREEN -->
+  <div id="lang-screen">
+    <div class="ls-glow"></div>
+    <div class="ls-emoji">👑</div>
+    <h1 class="ls-title" id="ls-rest-name">Sharma Dhaba</h1>
+    <p class="ls-subtitle" id="ls-tagline">Taste the Tradition</p>
+    <p class="ls-label">Choose your language</p>
+    <div class="ls-options">
+      <button class="ls-btn" onclick="selectLang('en')">
+        <span class="ls-btn-flag">🇬🇧</span>
+        <span class="ls-btn-text">
+          <span class="ls-btn-name">English</span>
+          <span class="ls-btn-native">Continue in English</span>
+        </span>
+        <span class="ls-btn-arrow">▶</span>
+      </button>
+      <button class="ls-btn" onclick="selectLang('hi')">
+        <span class="ls-btn-flag">🇮🇳</span>
+        <span class="ls-btn-text">
+          <span class="ls-btn-name">हिंदी</span>
+          <span class="ls-btn-native">हिंदी में जारी रखें</span>
+        </span>
+        <span class="ls-btn-arrow">▶</span>
+      </button>
+      <button class="ls-btn" onclick="selectLang('bn')">
+        <span class="ls-btn-flag">🇧🇩</span>
+        <span class="ls-btn-text">
+          <span class="ls-btn-name">বাংলা</span>
+          <span class="ls-btn-native">বাংলায় চালিয়ে যান</span>
+        </span>
+        <span class="ls-btn-arrow">▶</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="header">
+    <div class="header-top">
+      <div style="width:60px"></div>
+      <span class="rest-emoji">👑</span>
+      <button class="lang-btn" id="lang-btn" onclick="cycleLang()">EN</button>
+    </div>
+    <h1 class="rest-name" id="rest-name">Loading...</h1>
+    <p class="rest-tagline" id="rest-tagline"></p>
+  </div>
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input class="search-box" id="search-input" type="text" placeholder="Search dishes..." oninput="filterMenu()"/>
+  </div>
+  <div class="filter-wrap">
+    <button class="filter-tab active" onclick="setFilter('all',this)">🍽️ All</button>
+    <button class="filter-tab" onclick="setFilter('veg',this)">🟢 Veg</button>
+    <button class="filter-tab" onclick="setFilter('nonveg',this)">🔴 Non Veg</button>
+    <button class="filter-tab" onclick="setFilter('chef',this)">👨‍🍳 Chef's Pick</button>
+    <button class="filter-tab" onclick="setFilter('bestseller',this)">⭐ Bestseller</button>
+  </div>
+  <div id="menu-container">
+    <div id="loading"><div class="load-spin"></div><div>Loading menu...</div></div>
+  </div>
+  <div class="footer" id="footer-text">Powered by AR Menu System</div>
+  <button class="bill-fab" id="bill-fab" onclick="openBill()">🧾 My Bill</button>
+  <div class="modal-overlay" id="bill-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <span class="modal-title">🧾 My Bill</span>
+        <button class="modal-close" onclick="closeBill()">✕</button>
+      </div>
+      <div class="step active" id="step1">
+        <p class="step-title" id="step1-title">Select what you ordered and quantity</p>
+        <div id="bill-items-list"></div>
+        <div class="bill-summary">
+          <div class="bill-row"><span>Subtotal</span><span id="subtotal-val">₹0</span></div>
+          <div class="bill-row"><span id="gst-label">GST (5%)</span><span id="gst-val">₹0</span></div>
+          <div class="bill-row total"><span>TOTAL</span><span id="total-val">₹0</span></div>
+        </div>
+        <button class="proceed-btn" id="proceed-btn" onclick="goToStep2()" disabled>Continue to Send Bill →</button>
+      </div>
+      <div class="step" id="step2">
+        <label class="input-label">📱 Enter your WhatsApp number</label>
+        <input class="phone-input" id="phone-input" type="tel" placeholder="10 digit number" maxlength="10"/>
+        <label class="input-label">📋 Your Bill Preview</label>
+        <div class="bill-preview" id="bill-preview-text"></div>
+        <button class="whatsapp-btn" onclick="sendWhatsApp()">
+          <span>📲</span><span>Send Bill on WhatsApp</span>
+        </button>
+        <button class="back-step" onclick="showStep(1)">← Go Back</button>
+      </div>
+      <div class="step" id="step3">
+        <div class="success-wrap">
+          <div class="success-emoji">🎉</div>
+          <div class="success-title">Bill Sent!</div>
+          <p class="success-text">Your bill has been sent to your WhatsApp.<br>Please show it at the counter and pay.<br>Thank you for dining with us! 🙏</p>
+          <button class="done-btn" onclick="closeBill()">Done ✓</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // == CHANGE THIS for each restaurant ==
+    var OWNER_WHATSAPP = '919876543210';
+    var GST_PERCENT = 5;
+    // =====================================
+
+    var menuData = null;
+    var quantities = {};
+    var currentFilter = 'all';
+    var currentLang = 'en';
+    var langs = ['en','hi','bn'];
+    var langLabels = ['हि','বাং','EN'];
+
+    function selectLang(lang) {
+      currentLang = lang;
+      var screen = document.getElementById('lang-screen');
+      screen.style.transition = 'opacity 0.4s';
+      screen.style.opacity = '0';
+      setTimeout(function() { screen.style.display = 'none'; }, 400);
+      applyLang();
+    }
+
+    function cycleLang() {
+      var idx = langs.indexOf(currentLang);
+      currentLang = langs[(idx+1)%langs.length];
+      document.getElementById('lang-btn').textContent = langLabels[idx];
+    }
+
+    function setFilter(f,el) {
+      currentFilter = f;
+      document.querySelectorAll('.filter-tab').forEach(function(t){t.classList.remove('active');});
+      el.classList.add('active');
+      renderMenu();
+    }
+
+    function filterMenu() { renderMenu(); }
+
+    function buildStars(r) {
+      var h='';
+      for(var i=1;i<=5;i++) h+='<span class="star'+(i<=Math.round(r)?' filled':'')+'">★</span>';
+      return h;
+    }
+
+    function renderMenu() {
+      if(!menuData) return;
+      var search = document.getElementById('search-input').value.toLowerCase();
+      var cats = {};
+      menuData.dishes.forEach(function(dish) {
+        var ms = dish.name.toLowerCase().includes(search)||dish.ingredients.toLowerCase().includes(search);
+        var mf = currentFilter==='all'||
+          (currentFilter==='veg'&&dish.type==='veg')||
+          (currentFilter==='nonveg'&&dish.type==='nonveg')||
+          (currentFilter==='chef'&&dish.chef)||
+          (currentFilter==='bestseller'&&dish.bestseller);
+        if(ms&&mf){
+          if(!cats[dish.category]) cats[dish.category]=[];
+          cats[dish.category].push(dish);
+        }
+      });
+      var html='';
+      var keys=Object.keys(cats);
+      if(!keys.length){
+        html='<div class="no-results"><p style="font-size:36px">🍽️</p><p style="margin-top:10px;opacity:0.5">No dishes found</p></div>';
+      } else {
+        keys.forEach(function(cat){
+          html+='<div class="cat-title">'+cat+'</div>';
+          cats[cat].forEach(function(dish){
+            var badges='';
+            if(dish.chef) badges+='<span class="badge-chef">👨‍🍳 CHEF</span>';
+            if(dish.bestseller) badges+='<span class="badge-best">⭐ BEST</span>';
+            if(dish.isNew) badges+='<span class="badge-new">✨ NEW</span>';
+            html+='<a class="dish-card" href="dish.html?id='+dish.id+'">' +
+              '<img class="dish-thumb" src="'+dish.photo+'" onerror="this.src=\'https://placehold.co/78x78/2d0a4e/FFD700?text=🍽\'">' +
+              '<div class="dish-info">' +
+                '<h3>'+dish.name+'</h3>' +
+                '<div class="dish-meta"><span class="veg-badge '+dish.type+'">'+(dish.type==='veg'?'🟢 VEG':'🔴 NON VEG')+'</span></div>' +
+                '<div class="dish-meta"><div class="stars">'+buildStars(dish.rating)+'</div><span class="rating-count">('+dish.reviews+')</span></div>' +
+                '<div class="dish-price">₹'+dish.price+'</div>' +
+              '</div>' +
+              '<div class="card-badges">'+badges+'</div>' +
+              '<div class="card-arrow">▶</div>' +
+            '</a>';
+          });
+        });
+      }
+      document.getElementById('menu-container').innerHTML=html;
+    }
+
+    function openBill() {
+      quantities={};
+      buildBillItems();
+      updateTotal();
+      showStep(1);
+      document.getElementById('bill-modal').classList.add('open');
+    }
+
+    function closeBill() {
+      document.getElementById('bill-modal').classList.remove('open');
+      document.getElementById('phone-input').value='';
+    }
+
+    function showStep(n) {
+      document.querySelectorAll('.step').forEach(function(s){s.classList.remove('active');});
+      document.getElementById('step'+n).classList.add('active');
+    }
+
+    function buildBillItems() {
+      if(!menuData) return;
+      var html='';
+      menuData.dishes.forEach(function(dish){
+        quantities[dish.id]=0;
+        html+='<div class="bill-item">' +
+          '<div class="bill-item-info">' +
+            '<div class="bill-item-name">'+dish.name+'</div>' +
+            '<div class="bill-item-price">₹'+dish.price+' each</div>' +
+          '</div>' +
+          '<div class="qty-ctrl">' +
+            '<button class="qty-btn" onclick="changeQty('+dish.id+',-1)">−</button>' +
+            '<span class="qty-num" id="qty-'+dish.id+'">0</span>' +
+            '<button class="qty-btn" onclick="changeQty('+dish.id+',1)">+</button>' +
+          '</div>' +
+        '</div>';
+      });
+      document.getElementById('bill-items-list').innerHTML=html;
+    }
+
+    function changeQty(id,delta) {
+      quantities[id]=Math.max(0,(quantities[id]||0)+delta);
+      document.getElementById('qty-'+id).textContent=quantities[id];
+      updateTotal();
+    }
+
+    function updateTotal() {
+      if(!menuData) return;
+      var sub=0;
+      menuData.dishes.forEach(function(d){ sub+=(quantities[d.id]||0)*d.price; });
+      var gst=Math.round(sub*GST_PERCENT/100);
+      var total=sub+gst;
+      document.getElementById('subtotal-val').textContent='₹'+sub;
+      document.getElementById('gst-val').textContent='₹'+gst;
+      document.getElementById('total-val').textContent='₹'+total;
+      document.getElementById('proceed-btn').disabled=sub===0;
+    }
+
+    function goToStep2() {
+      var sub=0;
+      if(menuData) menuData.dishes.forEach(function(d){sub+=(quantities[d.id]||0)*d.price;});
+      if(sub===0){alert('Please select at least one dish!');return;}
+      buildPreview();
+      showStep(2);
+    }
+
+    function buildPreview() {
+      if(!menuData) return;
+      var now=new Date();
+      var date=now.toLocaleDateString('en-IN');
+      var time=now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+      var sub=0; var lines='';
+      menuData.dishes.forEach(function(d){
+        var q=quantities[d.id]||0;
+        if(q>0){var a=q*d.price;sub+=a;lines+=d.name+' x'+q+' = ₹'+a+'<br>';}
+      });
+      var gst=Math.round(sub*GST_PERCENT/100);
+      var total=sub+gst;
+      document.getElementById('bill-preview-text').innerHTML=
+        '🍽️ <b>'+menuData.restaurant+'</b><br>'+
+        menuData.address+'<br>'+
+        '📅 '+date+' ⏰ '+time+'<br>'+
+        '─────────────────<br>'+
+        lines+
+        '─────────────────<br>'+
+        'Subtotal: ₹'+sub+'<br>'+
+        'GST ('+GST_PERCENT+'%): ₹'+gst+'<br>'+
+        '<b>💰 TOTAL: ₹'+total+'</b>';
+    }
+
+    function sendWhatsApp() {
+      var phone=document.getElementById('phone-input').value.trim();
+      if(phone.length<6){
+        document.getElementById('phone-input').style.borderColor='#ff5252';
+        document.getElementById('phone-input').focus();
+        return;
+      }
+      document.getElementById('phone-input').style.borderColor='';
+      if(!menuData) return;
+      var now=new Date();
+      var date=now.toLocaleDateString('en-IN');
+      var time=now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+      var sub=0; var lines='';
+      menuData.dishes.forEach(function(d){
+        var q=quantities[d.id]||0;
+        if(q>0){var a=q*d.price;sub+=a;lines+='✅ '+d.name+' x'+q+' = ₹'+a+'\n';}
+      });
+      var gst=Math.round(sub*GST_PERCENT/100);
+      var total=sub+gst;
+      var msg='🍽️ *'+menuData.restaurant+'*\n_'+menuData.address+'_\n_'+menuData.phone+'_\n\n📋 *Your Bill*\n📅 '+date+' ⏰ '+time+'\n─────────────────\n'+lines+'─────────────────\nSubtotal: ₹'+sub+'\nGST ('+GST_PERCENT+'%): ₹'+gst+'\n*💰 TOTAL: ₹'+total+'*\n─────────────────\n📌 Please show this bill at counter.\n🙏 Thank you! Visit again!';
+      window.open('https://wa.me/'+phone+'?text='+encodeURIComponent(msg),'_blank');
+      var ownerMsg='🔔 *New Bill Alert!*\n👤 Customer: '+phone+'\n📅 '+date+' ⏰ '+time+'\n\n'+lines+'*💰 Total: ₹'+total+'*';
+      setTimeout(function(){window.open('https://wa.me/'+OWNER_WHATSAPP+'?text='+encodeURIComponent(ownerMsg),'_blank');},1500);
+      showStep(3);
+    }
+
+    fetch('menu.json')
+      .then(function(r){return r.json();})
+      .then(function(data){
+        menuData=data;
+        document.getElementById('rest-name').textContent=data.restaurant;
+        document.getElementById('rest-tagline').textContent=data.tagline;
+        document.getElementById('ls-rest-name').textContent=data.restaurant;
+        document.getElementById('ls-tagline').textContent=data.tagline;
+        document.getElementById('footer-text').textContent='Powered by AR Menu • '+data.restaurant;
+        renderMenu();
+      })
+      .catch(function(){
+        document.getElementById('loading').innerHTML='<p style="color:#ff5252">Error loading menu.</p>';
+      });
+  </script>
+</body>
+</html>
+  
