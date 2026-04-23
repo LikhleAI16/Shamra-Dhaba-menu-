@@ -1,287 +1,711 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Menu</title>
+  <title>Sharma Dhaba — Digital Menu</title>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet"/>
   <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-
-    body {
-      font-family: Arial, sans-serif;
-      background: #0a0a0a;
-      color: white;
-      min-height: 100vh;
+    :root {
+      --gold: #FFD700;
+      --gold2: #FFA500;
+      --purple: #1a0533;
+      --purple2: #2d0a4e;
+      --purple3: #3d1a5e;
+      --card: rgba(45,10,78,0.85);
+      --text: #f5f0ff;
+      --subtext: rgba(245,240,255,0.6);
+      --green: #00e676;
+      --red: #ff5252;
     }
 
-    /* Header */
-    .header {
-      background: linear-gradient(135deg, #1a1a2e, #16213e);
-      padding: 30px 20px;
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--purple);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(100,0,180,0.3) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(180,0,100,0.2) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(255,215,0,0.05) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ANTI THEFT OVERLAY */
+    #antitheft-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, #0d0020, #1a0533);
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
       text-align: center;
-      border-bottom: 2px solid #FFD700;
+    }
+
+    .at-logo { font-size: 55px; margin-bottom: 15px; }
+
+    .at-title {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold);
+      font-size: 24px;
+      margin-bottom: 6px;
+    }
+
+    .at-subtitle {
+      color: var(--subtext);
+      font-size: 13px;
+      margin-bottom: 30px;
+    }
+
+    .at-box {
+      background: rgba(255,215,0,0.07);
+      border: 1.5px solid rgba(255,215,0,0.3);
+      border-radius: 20px;
+      padding: 22px;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    .at-warning {
+      background: rgba(255,82,82,0.1);
+      border: 1.5px solid rgba(255,82,82,0.4);
+      border-radius: 14px;
+      padding: 14px 18px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: #ff8a80;
+      line-height: 1.6;
+    }
+
+    .at-warning strong { color: #ff5252; display: block; margin-bottom: 4px; font-size: 14px; }
+
+    .at-input-label {
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 700;
+      text-align: left;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .at-input {
+      width: 100%;
+      background: rgba(255,255,255,0.08);
+      border: 1.5px solid rgba(255,215,0,0.3);
+      border-radius: 12px;
+      padding: 14px 16px;
+      color: white;
+      font-size: 16px;
+      font-family: 'Nunito', sans-serif;
+      outline: none;
+      margin-bottom: 14px;
+    }
+
+    .at-input:focus { border-color: var(--gold); }
+    .at-input::placeholder { color: rgba(255,255,255,0.3); }
+
+    .at-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      color: #1a0533;
+      border: none;
+      padding: 16px;
+      border-radius: 14px;
+      font-size: 17px;
+      font-weight: 800;
+      font-family: 'Nunito', sans-serif;
+      cursor: pointer;
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(255,215,0,0.4); }
+      50%      { box-shadow: 0 0 0 15px rgba(255,215,0,0); }
+    }
+
+    .at-terms {
+      color: var(--subtext);
+      font-size: 11px;
+      margin-top: 14px;
+      line-height: 1.6;
+    }
+
+    /* HEADER */
+    .header {
       position: relative;
+      padding: 35px 20px 25px;
+      text-align: center;
+      z-index: 1;
+      border-bottom: 1px solid rgba(255,215,0,0.2);
       overflow: hidden;
     }
 
-    .header::before {
+    .header::after {
       content: '';
       position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(255,215,0,0.05) 0%, transparent 70%);
-      animation: glow 3s infinite;
+      bottom: 0; left: 10%; width: 80%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
     }
 
-    @keyframes glow {
-      0%, 100% { transform: scale(1); opacity: 0.5; }
-      50%       { transform: scale(1.1); opacity: 1; }
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
     }
 
-    .header .emoji { font-size: 45px; }
-
-    .header h1 {
-      color: #FFD700;
-      font-size: 26px;
-      margin: 8px 0 4px 0;
-      position: relative;
-    }
-
-    .header p {
-      color: rgba(255,255,255,0.7);
-      font-size: 13px;
-      position: relative;
-    }
-
-    /* Scan instruction */
-    .scan-tip {
+    /* Language switcher */
+    .lang-btn {
       background: rgba(255,215,0,0.1);
       border: 1px solid rgba(255,215,0,0.3);
-      margin: 15px;
-      padding: 12px;
-      border-radius: 12px;
-      text-align: center;
-      font-size: 13px;
-      color: rgba(255,255,255,0.8);
-    }
-
-    .scan-tip span {
-      color: #FFD700;
-      font-weight: bold;
-    }
-
-    /* Category title */
-    .category-title {
-      padding: 15px 20px 8px 20px;
+      color: var(--gold);
+      padding: 6px 12px;
+      border-radius: 20px;
       font-size: 12px;
-      color: #FFD700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      opacity: 0.8;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    .rest-emoji { font-size: 48px; display: block; margin-bottom: 8px; }
+
+    .rest-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 30px;
+      color: var(--gold);
+      text-shadow: 0 0 30px rgba(255,215,0,0.4);
+      margin-bottom: 4px;
+    }
+
+    .rest-tagline {
+      color: var(--subtext);
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    /* Today's special banner */
+    .special-banner {
+      background: linear-gradient(135deg, rgba(255,82,82,0.15), rgba(255,165,0,0.15));
+      border: 1px solid rgba(255,165,0,0.4);
+      border-radius: 12px;
+      padding: 10px 16px;
+      font-size: 13px;
+      color: #FFB74D;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 5px;
+    }
+
+    /* SEARCH */
+    .search-wrap {
+      padding: 15px 15px 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .search-box {
+      width: 100%;
+      background: rgba(255,255,255,0.07);
+      border: 1.5px solid rgba(255,215,0,0.2);
+      border-radius: 14px;
+      padding: 13px 16px 13px 44px;
+      color: white;
+      font-size: 15px;
+      font-family: 'Nunito', sans-serif;
+      outline: none;
+    }
+
+    .search-box:focus { border-color: rgba(255,215,0,0.5); }
+    .search-box::placeholder { color: rgba(255,255,255,0.3); }
+
+    .search-icon {
+      position: absolute;
+      left: 28px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      pointer-events: none;
+    }
+
+    /* FILTER TABS */
+    .filter-wrap {
+      padding: 8px 15px 12px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      z-index: 1;
+      position: relative;
+    }
+
+    .filter-wrap::-webkit-scrollbar { display: none; }
+
+    .filter-tab {
+      background: rgba(255,255,255,0.06);
+      border: 1.5px solid rgba(255,255,255,0.12);
+      color: var(--subtext);
+      padding: 7px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .filter-tab.active {
+      background: rgba(255,215,0,0.15);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    /* MENU CONTAINER */
+    #menu-container {
+      padding: 0 12px 30px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Category */
+    .cat-title {
+      padding: 18px 6px 10px;
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      color: var(--gold);
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cat-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(255,215,0,0.3), transparent);
     }
 
     /* Dish card */
     .dish-card {
-      margin: 8px 15px;
-      background: linear-gradient(135deg, #1a1a2e, #16213e);
-      border-radius: 16px;
-      border: 1px solid rgba(255,215,0,0.2);
-      overflow: hidden;
+      background: var(--card);
+      border: 1px solid rgba(255,215,0,0.15);
+      border-radius: 18px;
+      padding: 13px;
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
-      padding: 12px;
-      gap: 12px;
-      cursor: pointer;
-      transition: all 0.3s;
+      gap: 13px;
       text-decoration: none;
-      color: white;
+      color: var(--text);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      transition: transform 0.2s, border-color 0.2s;
     }
 
     .dish-card:active {
-      transform: scale(0.98);
-      border-color: #FFD700;
+      transform: scale(0.97);
+      border-color: rgba(255,215,0,0.4);
     }
 
-    /* Dish photo thumbnail */
+    .dish-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, rgba(255,215,0,0.03), transparent);
+      pointer-events: none;
+    }
+
+    /* Badges on card */
+    .card-badges {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: flex-end;
+    }
+
+    .badge-chef {
+      background: linear-gradient(135deg, #FF6B35, #FF4500);
+      color: white;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-best {
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      color: #1a0533;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 20px;
+    }
+
+    .badge-new {
+      background: linear-gradient(135deg, #00e676, #00b0ff);
+      color: #000;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 20px;
+    }
+
+    /* Dish photo */
     .dish-thumb {
-      width: 75px;
-      height: 75px;
-      border-radius: 12px;
+      width: 78px;
+      height: 78px;
+      border-radius: 14px;
       object-fit: cover;
-      border: 2px solid rgba(255,215,0,0.3);
+      border: 2px solid rgba(255,215,0,0.2);
       flex-shrink: 0;
-      background: #333;
+      background: var(--purple3);
     }
 
-    /* Dish info */
-    .dish-info {
-      flex: 1;
-    }
+    .dish-info { flex: 1; min-width: 0; padding-right: 30px; }
 
     .dish-info h3 {
-      font-size: 16px;
-      color: white;
-      margin-bottom: 4px;
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .dish-meta {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       margin-bottom: 6px;
+      flex-wrap: wrap;
     }
 
-    /* Veg NonVeg badge */
-    .badge-veg {
-      background: rgba(0,200,0,0.2);
-      border: 1px solid #00c800;
-      color: #00c800;
+    .veg-badge {
       font-size: 10px;
+      font-weight: 700;
       padding: 2px 8px;
       border-radius: 20px;
-      font-weight: bold;
     }
 
-    .badge-nonveg {
-      background: rgba(200,0,0,0.2);
-      border: 1px solid #ff4444;
-      color: #ff4444;
-      font-size: 10px;
-      padding: 2px 8px;
-      border-radius: 20px;
-      font-weight: bold;
-    }
+    .veg { background: rgba(0,230,118,0.12); border: 1px solid var(--green); color: var(--green); }
+    .nonveg { background: rgba(255,82,82,0.12); border: 1px solid var(--red); color: var(--red); }
 
-    /* Price */
+    /* Stars */
+    .stars { display: flex; gap: 1px; }
+    .star { font-size: 11px; color: rgba(255,255,255,0.2); }
+    .star.filled { color: var(--gold); }
+    .rating-count { font-size: 10px; color: var(--subtext); }
+
+    /* Spice */
+    .spice-mini { display: flex; gap: 2px; }
+    .spice-m { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.1); }
+    .spice-m.h { background: #ff5252; }
+
     .dish-price {
+      font-size: 17px;
+      font-weight: 800;
       color: #90EE90;
-      font-size: 16px;
-      font-weight: bold;
     }
 
-    /* Spice dots */
-    .spice {
-      display: flex;
-      gap: 3px;
+    /* Arrow */
+    .card-arrow {
+      position: absolute;
+      bottom: 13px;
+      right: 13px;
+      color: rgba(255,215,0,0.4);
+      font-size: 14px;
     }
 
-    .spice-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #333;
+    /* No results */
+    .no-results {
+      text-align: center;
+      padding: 50px 20px;
+      color: var(--subtext);
     }
 
-    .spice-dot.hot { background: #ff4444; }
-
-    /* Scan QR arrow */
-    .scan-arrow {
-      color: #FFD700;
-      font-size: 20px;
-      flex-shrink: 0;
-    }
+    .no-results .emoji { font-size: 40px; margin-bottom: 10px; }
 
     /* Footer */
     .footer {
       text-align: center;
-      padding: 30px 20px;
-      color: rgba(255,255,255,0.3);
-      font-size: 12px;
+      padding: 20px;
+      color: rgba(255,255,255,0.2);
+      font-size: 11px;
+      position: relative;
+      z-index: 1;
     }
 
     /* Loading */
     #loading {
       text-align: center;
-      padding: 50px;
-      color: #FFD700;
-      font-size: 16px;
+      padding: 60px 20px;
+      color: var(--gold);
     }
+
+    .load-spin {
+      width: 40px; height: 40px;
+      border: 3px solid rgba(255,215,0,0.2);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 15px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
 
+  <!-- ANTI THEFT OVERLAY -->
+  <div id="antitheft-overlay">
+    <div class="at-logo">🍽️</div>
+    <h1 class="at-title" id="at-rest-name">Sharma Dhaba</h1>
+    <p class="at-subtitle" id="at-tagline">Taste the Tradition</p>
+
+    <div class="at-warning">
+      <strong>⚠️ Important Notice</strong>
+      <span id="at-warning-text">Please enter your mobile number to access the menu. Customers who leave without paying will be reported to local authorities. Your number helps us serve you better.</span>
+    </div>
+
+    <div class="at-box">
+      <label class="at-input-label" id="at-label-name">👤 Your Name</label>
+      <input class="at-input" id="at-name" type="text" placeholder="Enter your name" maxlength="30"/>
+
+      <label class="at-input-label" id="at-label-phone">📱 Mobile Number</label>
+      <input class="at-input" id="at-phone" type="tel" placeholder="Enter 10 digit number" maxlength="10"/>
+
+      <button class="at-btn" onclick="enterMenu()" id="at-enter-btn">
+        ✨ Enter Menu
+      </button>
+
+      <p class="at-terms" id="at-terms">
+        By entering, you agree to pay for all items ordered.
+        Your number is recorded for security purposes only.
+      </p>
+    </div>
+  </div>
+
+  <!-- HEADER -->
   <div class="header">
-    <div class="emoji">🍽️</div>
-    <h1 id="rest-name">Loading...</h1>
-    <p id="rest-tagline"></p>
+    <div class="header-top">
+      <div style="width:60px"></div>
+      <span class="rest-emoji">👑</span>
+      <button class="lang-btn" onclick="cycleLang()" id="lang-btn">EN</button>
+    </div>
+    <h1 class="rest-name" id="rest-name">Sharma Dhaba</h1>
+    <p class="rest-tagline" id="rest-tagline">Taste the Tradition</p>
+    <div class="special-banner">
+      🔥 <span id="special-text">Today's Special: Check Chef's picks below!</span>
+    </div>
   </div>
 
-  <div class="scan-tip">
-    📱 <span>Scan QR code</span> next to any dish
-    to see full details and photo!
+  <!-- SEARCH -->
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input class="search-box" id="search-input" type="text"
+      placeholder="Search dishes..." oninput="filterMenu()"/>
   </div>
 
+  <!-- FILTER TABS -->
+  <div class="filter-wrap" id="filter-tabs">
+    <button class="filter-tab active" data-filter="all" onclick="setFilter('all',this)">
+      🍽️ All
+    </button>
+    <button class="filter-tab" data-filter="veg" onclick="setFilter('veg',this)">
+      🟢 Veg
+    </button>
+    <button class="filter-tab" data-filter="nonveg" onclick="setFilter('nonveg',this)">
+      🔴 Non Veg
+    </button>
+    <button class="filter-tab" data-filter="chef" onclick="setFilter('chef',this)">
+      👨‍🍳 Chef's Pick
+    </button>
+    <button class="filter-tab" data-filter="bestseller" onclick="setFilter('bestseller',this)">
+      ⭐ Bestseller
+    </button>
+  </div>
+
+  <!-- MENU -->
   <div id="menu-container">
-    <div id="loading">✨ Loading menu...</div>
+    <div id="loading">
+      <div class="load-spin"></div>
+      <div>Loading menu...</div>
+    </div>
   </div>
 
-  <div class="footer">
-    Powered by AR Menu • Scan each dish QR
+  <div class="footer" id="footer-text">
+    Powered by AR Menu System
   </div>
 
   <script>
-    fetch('menu.json')
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
+    var menuData = null;
+    var currentFilter = 'all';
+    var currentSearch = '';
+    var currentLang = 'en';
 
-        // Set restaurant info
-        document.getElementById('rest-name')
-          .textContent = data.restaurant;
-        document.getElementById('rest-tagline')
-          .textContent = data.tagline;
+    var translations = {
+      en: {
+        search: 'Search dishes...',
+        all: '🍽️ All',
+        veg: '🟢 Veg',
+        nonveg: '🔴 Non Veg',
+        chef: "👨‍🍳 Chef's Pick",
+        best: '⭐ Bestseller',
+        enterMenu: '✨ Enter Menu',
+        name: '👤 Your Name',
+        phone: '📱 Mobile Number',
+        namePh: 'Enter your name',
+        phonePh: 'Enter 10 digit number',
+        warning: 'Please enter your mobile number to access the menu. Customers who leave without paying will be reported. Your number helps us serve you better.',
+        terms: 'By entering, you agree to pay for all items ordered. Your number is recorded for security purposes only.',
+        special: "Today's Special: Check Chef's picks below!",
+        noResults: 'No dishes found',
+        langBtn: 'हि'
+      },
+      hi: {
+        search: 'व्यंजन खोजें...',
+        all: '🍽️ सभी',
+        veg: '🟢 शाकाहारी',
+        nonveg: '🔴 मांसाहारी',
+        chef: '👨‍🍳 शेफ की पसंद',
+        best: '⭐ बेस्टसेलर',
+        enterMenu: '✨ मेनू देखें',
+        name: '👤 आपका नाम',
+        phone: '📱 मोबाइल नंबर',
+        namePh: 'अपना नाम दर्ज करें',
+        phonePh: '10 अंक का नंबर दर्ज करें',
+        warning: 'मेनू देखने के लिए अपना मोबाइल नंबर दर्ज करें। बिना भुगतान के जाने वाले ग्राहकों की सूचना दी जाएगी।',
+        terms: 'प्रवेश करके, आप सभी ऑर्डर किए गए आइटम के भुगतान के लिए सहमत हैं।',
+        special: 'आज का विशेष: नीचे शेफ की पसंद देखें!',
+        noResults: 'कोई व्यंजन नहीं मिला',
+        langBtn: 'বাং'
+      },
+      bn: {
+        search: 'খাবার খুঁজুন...',
+        all: '🍽️ সব',
+        veg: '🟢 নিরামিষ',
+        nonveg: '🔴 আমিষ',
+        chef: '👨‍🍳 শেফের পছন্দ',
+        best: '⭐ বেস্টসেলার',
+        enterMenu: '✨ মেনু দেখুন',
+        name: '👤 আপনার নাম',
+        phone: '📱 মোবাইল নম্বর',
+        namePh: 'আপনার নাম লিখুন',
+        phonePh: '10 সংখ্যার নম্বর লিখুন',
+        warning: 'মেনু দেখতে আপনার মোবাইল নম্বর দিন। বিনা পেমেন্টে চলে গেলে রিপোর্ট করা হবে।',
+        terms: 'প্রবেশ করে আপনি সকল অর্ডারের পেমেন্ট করতে সম্মত হচ্ছেন।',
+        special: 'আজকের বিশেষ: নিচে শেফের পছন্দ দেখুন!',
+        noResults: 'কোনো খাবার পাওয়া যায়নি',
+        langBtn: 'EN'
+      }
+    };
 
-        // Group dishes by category
-        var categories = {};
-        data.dishes.forEach(function(dish) {
-          if (!categories[dish.category]) {
-            categories[dish.category] = [];
-          }
-          categories[dish.category].push(dish);
-        });
+    var langs = ['en', 'hi', 'bn'];
 
-        // Build menu HTML
-        var html = '';
-        Object.keys(categories).forEach(function(cat) {
-          html += '<div class="category-title">' + cat + '</div>';
-          categories[cat].forEach(function(dish) {
+    function cycleLang() {
+      var idx = langs.indexOf(currentLang);
+      currentLang = langs[(idx + 1) % langs.length];
+      applyLang();
+      if (menuData) renderMenu();
+    }
 
-            // Build spice dots
-            var spiceDots = '';
-            for (var i = 1; i <= 5; i++) {
-              spiceDots += '<div class="spice-dot' +
-                (i <= dish.spice ? ' hot' : '') +
-                '"></div>';
-            }
+    function applyLang() {
+      var t = translations[currentLang];
+      document.getElementById('lang-btn').textContent = t.langBtn;
+      document.getElementById('search-input').placeholder = t.search;
+      document.getElementById('special-text').textContent = t.special;
+      document.getElementById('at-label-name').textContent = t.name;
+      document.getElementById('at-label-phone').textContent = t.phone;
+      document.getElementById('at-name').placeholder = t.namePh;
+      document.getElementById('at-phone').placeholder = t.phonePh;
+      document.getElementById('at-warning-text').textContent = t.warning;
+      document.getElementById('at-terms').textContent = t.terms;
+      document.getElementById('at-enter-btn').textContent = t.enterMenu;
+      var tabs = document.querySelectorAll('.filter-tab');
+      var labels = [t.all, t.veg, t.nonveg, t.chef, t.best];
+      tabs.forEach(function(tab, i) { tab.textContent = labels[i]; });
+    }
 
-            // Veg badge
-            var badge = dish.type === 'veg'
-              ? '<span class="badge-veg">🟢 VEG</span>'
-              : '<span class="badge-nonveg">🔴 NON VEG</span>';
+    function enterMenu() {
+      var name = document.getElementById('at-name').value.trim();
+      var phone = document.getElementById('at-phone').value.trim();
+      if (!name) {
+        document.getElementById('at-name').focus();
+        document.getElementById('at-name').style.borderColor = '#ff5252';
+        return;
+      }
+      if (phone.length !== 10 || isNaN(phone)) {
+        document.getElementById('at-phone').focus();
+        document.getElementById('at-phone').style.borderColor = '#ff5252';
+        return;
+      }
+      localStorage.setItem('guest_name', name);
+      localStorage.setItem('guest_phone', phone);
+      localStorage.setItem('entry_time', new Date().toLocaleTimeString());
+      document.getElementById('antitheft-overlay').style.opacity = '0';
+      document.getElementById('antitheft-overlay').style.transition = 'opacity 0.5s';
+      setTimeout(function() {
+        document.getElementById('antitheft-overlay').style.display = 'none';
+      }, 500);
+    }
 
-            html += '<a class="dish-card" href="dish.html?id=' + dish.id + '">' +
-              '<img class="dish-thumb" src="' + dish.photo + '" onerror="this.src=\'https://via.placeholder.com/75x75/1a1a2e/FFD700?text=🍽️\'">' +
-              '<div class="dish-info">' +
-                '<h3>' + dish.name + '</h3>' +
-                '<div class="dish-meta">' +
-                  badge +
-                  '<div class="spice">' + spiceDots + '</div>' +
-                '</div>' +
-                '<div class="dish-price">₹' + dish.price + '</div>' +
-              '</div>' +
-              '<div class="scan-arrow">▶</div>' +
-            '</a>';
-          });
-        });
-
-        document.getElementById('menu-container').innerHTML = html;
-      })
-      .catch(function(e) {
-        document.getElementById('loading').textContent =
-          'Error loading menu. Please refresh.';
+    function setFilter(f, el) {
+      currentFilter = f;
+      document.querySelectorAll('.filter-tab').forEach(function(t) {
+        t.classList.remove('active');
       });
-  </script>
+      el.classList.add('active');
+      renderMenu();
+    }
 
-</body>
-  </html>
+    function filterMenu() {
+      currentSearch = document.getElementById('search-input').value.toLowerCase();
+      renderMenu();
+    }
+
+    function buildStars(rating) {
+      var html = '<div class="stars">';
+      for (var i = 1; i <= 5; i++) {
+        html += '<span class="star' + (i <= Math.round(rating) ? ' filled' : '') + '">★</span>';
+      }
+      html += '</div>';
+      return html;
+    }
+
+    function buildSpice(level) {
+      var html = '<div class="spice-mini">';
+      for (var i = 1; i <= 5; i++) {
+        html += '<div class="spice-m' + (i <= level ? ' h' : '') + '"></div>';
+      }
+      html += '</div>';
+      return html;
+    }
+
+    function renderMenu() {
+      if (!menuData) return;
+      var container = document.getElementById('menu-container');
+      var catego
